@@ -156,7 +156,21 @@ public class Server extends JFrame implements ActionListener {
     // 启动服务器
     private void startServer(ActionEvent e) {
         try {
-            int port = Integer.parseInt(portField.getText().trim());
+            String serverPort=portField.getText().trim();
+
+            if (serverPort.isEmpty()){
+                JOptionPane.showMessageDialog(this, "端口号不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            //如果用户给出的端口号不是整数，不是[1024,65535]之间的动态端口号，都要提示用户。
+            if (!serverPort.matches("[0-9]+") || Integer.parseInt(serverPort) < 1024 || Integer.parseInt(serverPort) > 65535) {
+                JOptionPane.showMessageDialog(this, "请输入正确的端口号，要求在[1024,65535]之间", "错误", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+
+            int port = Integer.parseInt(serverPort);
             serverSocket = new ServerSocket(port);
             isRunning = true;
             enableControls(true);
